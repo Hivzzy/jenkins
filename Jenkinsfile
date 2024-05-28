@@ -2,45 +2,46 @@ pipeline {
     agent any
 
     tools {
-        maven "jenkins-maven"
+        maven 'jenkins-maven'
     }
 
     stages {
-        stage('Build Maven') {
+        stage('Checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/Hivzzy/jenkins.git'
-
-                bat "mvn -v"
-                bat "docker --version"
-                bat "mvn clean package"
+            }
+        }
+        
+        stage('Build Maven') {
+            steps {
+                bat 'mvn -v'
+                bat 'docker --version'
+                bat 'mvn clean package'
             }
         }
         
         stage('Check SonarQube Code Analysis') {
             steps {
                 withSonarQubeEnv('jenkins-sonar') {
-                    bat "mvn clean verify sonar:sonar"
+                    bat 'mvn clean verify sonar:sonar'
                 }
             }
         }
         
         stage('Build Docker Image') {
             steps {
-                bat "docker build -t jenkins-sonarqube ."
+                bat 'docker build -t jenkins-sonarqube .'
             }
         }
         
         stage('Push Image to Docker Hub') {
             steps {
                 withCredentials([string(credentialsId: 'DOCKER_USER', variable: 'DOCKER_USER_VAR'), string(credentialsId: 'DOCKER_PASS', variable: 'DOCKER_PASS_VAR')]) {
-
-                    bat "docker login -u ${DOCKER_USER_VAR} -p ${DOCKER_PASS_VAR}"
+                    bat 'docker login -u %DOCKER_USER_VAR% -p %DOCKER_PASS_VAR%'
                 }
                 
-
-                bat "docker push jenkins-sonarqube"
-                
-                bat "docker logout"
+                bat 'docker push jenkins-sonarqube'
+                bat 'docker logout'
             }
         }
     }
