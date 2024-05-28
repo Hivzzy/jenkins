@@ -14,7 +14,7 @@
     <description>Demo project for Spring Boot</description>
     <properties>
         <java.version>21</java.version>
-        <sonar.host.url>http://localhost:9000</sonar.host.url>
+        <sonar.host.url>http://localhost:9000</sonar.host.url> <!-- URL server SonarQube Anda -->
         <sonar.projectKey>com.jenkins:demo</sonar.projectKey>
         <sonar.projectName>Demo Project</sonar.projectName>
     </properties>
@@ -33,7 +33,13 @@
             <artifactId>logback-classic</artifactId>
             <version>1.2.3</version>
         </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.30</version> <!-- Use a version compatible with logback-classic 1.2.3 -->
+        </dependency>
     </dependencies>
+
     <build>
         <plugins>
             <plugin>
